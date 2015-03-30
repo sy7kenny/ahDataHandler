@@ -46,9 +46,6 @@ public class SMAReader {
 		smaJson.put("params", device);
 
 		this.sma = smaJson.toString();
-		// WR30U09E:2002225636
-		// CO2 Saved
-		// E-Total
 		System.out.println(smaJson.toString());
 	}
 
