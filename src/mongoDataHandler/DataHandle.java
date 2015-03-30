@@ -1,11 +1,11 @@
 package mongoDataHandler;
 
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import com.mongodb.BasicDBList;
+import org.bson.types.ObjectId;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -27,27 +27,37 @@ public class DataHandle {
 		BasicDBObject query = new BasicDBObject("time",
 				java.util.regex.Pattern.compile(dateString));
 		DBCursor cursor = houseData.find(query);
-		
+
 		BasicDBObject tobj = null;
 		while (cursor.hasNext()) {
-			//BObject tobj = cursor.next();
+			// BObject tobj = cursor.next();
 			// power = (BasicDBList) tobj.get("power");
-			//String jsonObj = JSON.serialize(cursor.next());
+			// String jsonObj = JSON.serialize(cursor.next());
 
-			//String result = (cursor.next().toString());
+			// String result = (cursor.next().toString());
 
-			//resultArray.add(result);
+			// resultArray.add(result);
 			
 			tobj = (BasicDBObject) cursor.next();
-			BasicDBList power = (BasicDBList) tobj.get("power");
-			
-			System.out.println(power);
+			Object time = tobj.get("time");
 
-			
+			Object power = tobj.get("power");
+			// System.out.println(time.toString());
+
+			BasicDBObject powerJson = new BasicDBObject();
+			powerJson.put("time", time);
+			powerJson.put("power", power);
+			resultArray.add(powerJson.toString());
+
 		}
 
 		return resultArray;
 
+	}
+
+	public String getDataNow(ArrayList<String> todayArray) {
+
+		return (todayArray.get(todayArray.size() - 1));
 	}
 
 }
