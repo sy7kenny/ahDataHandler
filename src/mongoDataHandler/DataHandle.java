@@ -17,40 +17,51 @@ import com.mongodb.DBCursor;
 public class DataHandle {
 	private DBCollection houseData;
 
+	// Constructor that pass the houseData collection from MongoDB to this class
 	public DataHandle(DBCollection houseData) {
 
 		this.houseData = houseData;
 	}
 
+	/**
+	 * Return an ArrayList of the day of data needed to be displayed on D3 The
+	 * element in the ArrayList is an json object in string format. This method
+	 * will use the houseData collection from MongoDB to find the specific day
+	 * of data. Also it will do an iteration on the time portion of the array,
+	 * rounding to the nearest ten minutes
+	 * 
+	 * @param offset
+	 *            the offset of day in date, 0 indicates today, -1 = yesterday,
+	 *            etc
+	 * @return arrayList of the data
+	 */
 	public ArrayList<String> getData(int offset) {
+
 		ArrayList<String> resultArray = new ArrayList<String>();
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, offset);
 		SimpleDateFormat ft = new SimpleDateFormat("E MMM d");
 		String dateString = ft.format(cal.getTime());
 		BasicDBObject query = new BasicDBObject("time",
-				java.util.regex.Pattern.compile(dateString));
-		DBCursor cursor = houseData.find(query);
+				java.util.regex.Pattern.compile(dateString)); // this part sets
+																// the date
+																// pattern to
+																// find
+		DBCursor cursor = houseData.find(query); // finding part
 
 		BasicDBObject tobj = null;
 		while (cursor.hasNext()) {
-			// BObject tobj = cursor.next();
-			// power = (BasicDBList) tobj.get("power");
-			// String jsonObj = JSON.serialize(cursor.next());
 
-			// String result = (cursor.next().toString());
-
-			// resultArray.add(result);
+			/*
+			 * The while loop here will collect all the matching date data into
+			 * an arrayList
+			 */
 
 			tobj = (BasicDBObject) cursor.next();
 			Object time = tobj.get("time");
-			// String fixTime = fixTime(time.toString());
 			String roundTime = roundDate(time.toString());
 			Object power = tobj.get("power");
-			// System.out.println(time.toString());
-
 			BasicDBObject powerJson = new BasicDBObject();
-			// powerJson.put("time", fixTime);
 			powerJson.put("time", roundTime);
 			powerJson.put("power", power);
 			resultArray.add(powerJson.toString());
@@ -61,11 +72,21 @@ public class DataHandle {
 
 	}
 
+	/**
+	 * Returns a string in json format about this instant moment's power data.
+	 * @param todayArray the arrayList that is already generated for faster computation
+	 * @return string format of this instant moment's power data.
+	 */
 	public String getDataNow(ArrayList<String> todayArray) {
 
 		return (todayArray.get(todayArray.size() - 1));
 	}
 
+	/**
+	 * A dirty way using regex to iterate the time to the nearest 10 min.
+	 * @param time the time string that will be evaluated, takes the format E MMM d hh:mm:ss zzz yyyy
+	 * @return the iterated time string
+	 */
 	public String fixTime(String time) {
 		String regex = "\\w+ \\w+ \\d+ (\\d{2}:\\d{2}:\\d{2}).*";
 		Pattern p = Pattern.compile(regex);
@@ -93,6 +114,13 @@ public class DataHandle {
 
 	}
 
+	/**
+	 * A cleaner way to iterate the time to nearest 10 min
+	 * by setting the time string back to Date object
+	 * and change the min and sec value inside
+	 * @param time the time string to be iterated
+	 * @return the rounded min time string
+	 */
 	@SuppressWarnings("deprecation")
 	public String roundDate(String time) {
 		DateFormat formatter = new SimpleDateFormat("E MMM d hh:mm:ss zzz yyyy");

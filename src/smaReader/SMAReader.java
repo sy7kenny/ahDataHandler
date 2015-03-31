@@ -23,6 +23,7 @@ public class SMAReader {
 	HttpClient httpClient = new DefaultHttpClient();
 
 	public SMAReader() {
+		// Setting the RPC as a BasicDBObject
 		this.enviro = new BasicDBObject();
 		ArrayList<String> channels = new ArrayList<String>();
 		channels.add("CO2 saved");
@@ -45,12 +46,12 @@ public class SMAReader {
 		smaJson.put("id", "5");
 		smaJson.put("params", device);
 
-		this.sma = smaJson.toString();
-		System.out.println(smaJson.toString());
+		this.sma = smaJson.toString(); // Then the string is return the the class variable
+		//System.out.println(smaJson.toString());
 	}
 
 	public String httpResponse() {
-		// This function interacts with the sma sunnywebbox
+		// This function interacts with the sma sunnywebbox, gets the CO 2 saved and E-total value 
 
 		try {
 			

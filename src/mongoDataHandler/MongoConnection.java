@@ -23,6 +23,8 @@ public class MongoConnection {
 	}
 
 	public void connect() {
+		// Connection to mongoDB
+
 		try {
 			MongoClient mongoClient = new MongoClient(uri);
 			this.db = mongoClient.getDB(uri.getDatabase());

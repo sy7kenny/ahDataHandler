@@ -11,10 +11,10 @@ public class Power implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String pB;
-	private String pG;
-	private String pH;
-	private String pP;
+	private String pB; // Power of battery
+	private String pG; // Power of grid
+	private String pH; // Power of house
+	private String pP; // Power of solar panel
 
 	public Power() {
 	}
@@ -59,6 +59,9 @@ public class Power implements Serializable {
 	}
 
 	public DBObject bsonFromPojo() {
+		/* Constructing a bson object that will be
+		 * uploaded to mongoDB
+		 */
 		BasicDBObject document = new BasicDBObject();
 
 		document.put("pB", this.pB);
@@ -70,6 +73,9 @@ public class Power implements Serializable {
 	}
 
 	public void makePojoFromBson(DBObject bson) {
+		/* This will convert the bson object
+		 * back to json format
+		 */
 		BasicDBObject b = (BasicDBObject) bson;
 		this.pB = (String) b.get("pB");
 		this.pG = (String) b.get("pG");
